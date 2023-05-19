@@ -1,7 +1,7 @@
-const mongoose = require("../modules/connection");
+const mongoose = require("./connection");
 
-//Creating new user schema
-const userSchema = new mongoose.Schema({
+//Creating new student schema
+const studentSchema = new mongoose.Schema({
   firstName: {
     type: String,
     required: true,
@@ -27,6 +27,6 @@ const userSchema = new mongoose.Schema({
     },
   ],
 });
-const User = mongoose.model("User", userSchema);
+const Student = mongoose.model("Student", studentSchema);
 
-module.exports = User;
+module.exports = Student;
