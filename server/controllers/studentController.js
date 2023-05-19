@@ -125,20 +125,5 @@ const status = (req, res) => {
   });
 };
 
-///İlk Hali//////////
-
-// const status = (req, res) => {
-//   const token = req.cookies.access_token;
-//   if (!token) {
-//     return res.json(false);
-//   }
-//   return jwt.verify(token, process.env.JWT_SECRET, (error) => {
-//     if (error) {
-//       return res.json(false);
-//     }
-//     return res.json(true);
-//   });
-// };
-
 
 module.exports = { getAllStudents, getStudentById, signUp, signIn, signOut, status};

@@ -3,7 +3,7 @@ const mongoose = require("./connection");
 
 //Creating new courses schema
 const coursesSchema = new mongoose.Schema({
-    coursId: {
+    courseId: {
       type: String,
       required: true,
     },
@@ -11,7 +11,7 @@ const coursesSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
-    Instructor: {
+    instructor: {
       type: String,
       required: true,
     },
