@@ -32,9 +32,58 @@ const getStudentById = async (req, res) => {
   }
 };
 
+//Update a student by using a student id
+const updateStudentById = async (req, res) => {
+  const id = req.params.id;
+  const { firstName, lastName, email } = req.body;
+  if (
+    !firstName &&
+    firstName.trim() === "" &&
+    !lastName &&
+    lastName.trim() === "" &&
+    !email &&
+    email.trim() === ""
+  ) {
+    return res.status(422).json({ message: "Invalid Input" });
+  }
+  let student;
+  try {
+    student = await Student.findByIdAndUpdate(id, {
+      firstName,
+      lastName,
+      email,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+
+  if (!student) {
+    return res.status(500).json({ message: "Unable to update" });
+  }
+  return res.status(200).json({ message: "Student updated successfully" });
+};
+
+//Delete a student from the database
+const deleteStudentById = async (req, res) => {
+  const id = req.params.id;
+  let student;
+
+  try {
+    student = await Student.findByIdAndDelete(id);
+  } catch (error) {
+    return console.log(error);
+  }
+
+  if (!student) {
+    return res.status(500).json({ message: "Unable to delete" });
+  }
+  {
+    return res.status(200).json({ message: "Student deleted successfuly" });
+  }
+};
 
 const signUp = async (req, res) => {
-  const { firstName, lastName, email, password} = req.body;
+  const { firstName, lastName, email, password } = req.body;
 
   //Checking the required fields before creating the student:
   if (!firstName || !lastName || !email || !password || password.length < 6) {
@@ -56,7 +105,7 @@ const signUp = async (req, res) => {
     return res.status(201).json("New Student Created.");
   } catch (error) {
     console.log(error);
-    return (error);
+    return error;
   }
 };
 
@@ -93,14 +142,14 @@ const signIn = async (req, res) => {
       expiresIn: "3h",
     });
 
-      // Set the token as Authorization header
-  res.header('Authorization', `Bearer ${token}`);
+    // Set the token as Authorization header
+    res.header("Authorization", `Bearer ${token}`);
     return res
       .cookie("access_token", token, {
         httpOnly: true,
       })
       .status(200)
-      .json({ message: "Login Successful."});
+      .json({ message: "Login Successful." });
   } catch (error) {
     console.log(error);
   }
@@ -125,5 +174,13 @@ const status = (req, res) => {
   });
 };
 
-
-module.exports = { getAllStudents, getStudentById, signUp, signIn, signOut, status};
+module.exports = {
+  getAllStudents,
+  getStudentById,
+  signUp,
+  signIn,
+  signOut,
+  status,
+  updateStudentById,
+  deleteStudentById
+};
