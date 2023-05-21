@@ -1,15 +1,28 @@
-
-import './App.scss'
+// eslint-disable-next-line no-unused-vars
+import React from "react";
+import "./App.scss";
+import { Route, Routes } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+import Home from "./pages/home/Home";
+import SignUpSide from "./components/signUpSide";
+import SignInSide from "./components/signInSide";
 
 function App() {
-
   return (
     <>
-      <div>
-        Hello World
-      </div>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: { fontSize: "1.8rem" },
+        }}
+      ></Toaster>
+      <Routes>
+        <Route path="/" element={<SignInSide />} />
+        <Route path="/sign-up" element={<SignUpSide />} />
+        <Route path="/home" element={<Home />} />
+      </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

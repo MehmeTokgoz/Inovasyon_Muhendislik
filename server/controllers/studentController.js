@@ -109,6 +109,49 @@ const signUp = async (req, res) => {
   }
 };
 
+// const signIn = async (req, res) => {
+//     // Checking the required fields before sign in
+//     const { email, password } = req.body;
+//     if (!email || !password) {
+//       return res.send({ message: "Email and password are required" });
+//     }
+//     try {
+//       //Get the student whose email is provided email.
+//       const student = await Student.findOne({ email: email });
+  
+//       //Check the student exists or not:
+//       if (!student) {
+//         return res.send({ message: "Student was not found" });
+//       }
+//       //Check the password if the student exists:
+//       const isPasswordCorrect = await bcryptjs.compare(
+//         req.body.password,
+//         student.password
+//       );
+  
+//       if (!isPasswordCorrect) {
+//         return res.send({ message: "Wrong password" });
+//       }
+  
+//       //Create a cookie and token if the password is correct
+//       const payload = {
+//         id: student._id,
+//         name: student.name,
+//       };
+//       // Create a token if the password is correct.
+//       const token = jwt.sign(payload, process.env.JWT_SECRET, {
+//         expiresIn: "3h",
+//       });
+  
+//       // Set the token as Authorization header
+//       return res
+//         .send({ message: "Login Successful.", "access_token": token, "studentId": student._id });
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   };
+
+
 const signIn = async (req, res) => {
   // Checking the required fields before sign in
   const { email, password } = req.body;
@@ -149,7 +192,7 @@ const signIn = async (req, res) => {
         httpOnly: true,
       })
       .status(200)
-      .json({ message: "Login Successful." });
+      .json({ message: "Login Successful.", "access_token": token, "studentId": student._id });
   } catch (error) {
     console.log(error);
   }
@@ -160,7 +203,21 @@ const signOut = (req, res) => {
   return res.status(200).json({ message: "Logout Successful." });
 };
 
-// Check the status, is the student logged in or not:
+// Check the student
+
+// const status = async (req, res) => {
+//   jwt.verify(req.body.token, process.env.JWT_SECRET, async (err, payload) => {
+//     if (payload) {
+//       var student = await Student.findOne({ _id: payload.id });
+//       res.send({ _id: student._id, name: student.firstName, email: student.email });
+//     } else {
+//       res.send({ message: "Session expired" });
+//     }
+//   });
+// };
+
+
+
 const status = (req, res) => {
   const token = req.cookies.access_token;
   if (!token) {
