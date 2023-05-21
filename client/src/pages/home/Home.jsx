@@ -4,26 +4,23 @@ import "./home.scss";
 import axios from "axios";
 
 function Home() {
+    // eslint-disable-next-line no-unused-vars
     const [studentId, setStudentId] = useState(localStorage.getItem("studentId"))
-    //Send a request to check user.
+    const [student, setStudent] = useState(null);
 
-  const verifyUser = async () => {
-    if (localStorage.getItem("access_token")) {
-      await axios
-        .get("http://localhost:3540/api/students/status", {
-         token: localStorage.getItem("access_token")
-        })
-        .then((data) => {
+    const getStudentInfo = async () => {
+        await axios.get(`http://localhost:3540/api/students/student/${studentId}`).then(({ data }) => {
           console.log(data);
+          setStudent(data);
         });
-    }
-  };
+      };
+    
+      // Call the getStudentInfo function on page render.
+      useEffect(() => {
+        getStudentInfo();
+      }, [studentId]);
 
-  useEffect(() => {
-    verifyUser();
-  }, [studentId]);
-
-  return <div>Home</div>;
+  return <div>Welcome {student && student.name}</div>;
 }
 
 export default Home;

@@ -41,7 +41,6 @@ export default function SignInSide() {
             localStorage.setItem("studentId", data.studentId);
             localStorage.setItem("access_token", data.access_token)
             console.log(data);
-            console.log(1);
           }
         })
       // If the values are correct navigate to the student home page
