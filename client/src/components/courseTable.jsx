@@ -26,6 +26,7 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 // eslint-disable-next-line no-unused-vars
 import { Button } from "@mui/material";
+import { toast } from "react-hot-toast";
 
 function CourseTable() {
   // eslint-disable-next-line no-unused-vars
@@ -39,7 +40,9 @@ function CourseTable() {
 
   // eslint-disable-next-line no-unused-vars
   const [courseList, setCourseList] = useState([]);
-  const [selectedCourse, setSelectedCourse] = useState([])
+  const [selectedCourses, setSelectedCourses] = useState(
+    JSON.parse(localStorage.getItem("myCourseList")) || []
+  );
 
   // Request to get all posts from database.
   const getAllCourses = async () => {
@@ -50,14 +53,29 @@ function CourseTable() {
     });
   };
 
-
   const getCourseById = async (_id) => {
     await axios
       .get(`http://localhost:3540/api/courses/get-a-course/${_id}`)
       .then(({ data }) => {
-        setSelectedCourse({data})
-        console.log(selectedCourse);
+        if (!selectedCourses) {
+          setSelectedCourses({
+            courseId: data.courseId,
+            courseName: data.courseName,
+            instructor: data.instructor,
+          });
+        }
+        console.log(selectedCourses);
       });
+
+    if (selectedCourses) {
+      const courseToAdd = {
+        courseId: selectedCourses.courseId,
+        courseName: selectedCourses.courseName,
+        instructor: selectedCourses.instructor,
+      };
+    }
+
+    toast.success("Course Added");
   };
 
   // Call the getAllCourses and getCourseById function on the page render.
@@ -388,7 +406,7 @@ function CourseTable() {
                     >
                       <Button
                         variant="outlined"
-                        onClick={()=> getCourseById(row._id)}
+                        onClick={() => getCourseById(row._id)}
                         id="button-show-info"
                       >
                         ADD TO MY COURSES
