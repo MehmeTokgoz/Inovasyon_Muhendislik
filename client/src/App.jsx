@@ -6,6 +6,7 @@ import { Toaster } from "react-hot-toast";
 import Home from "./pages/home/Home";
 import SignUpSide from "./components/signUpSide";
 import SignInSide from "./components/signInSide";
+import Profile from "./pages/profile/Profile";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/" element={<SignInSide />} />
         <Route path="/sign-up" element={<SignUpSide />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </>
   );

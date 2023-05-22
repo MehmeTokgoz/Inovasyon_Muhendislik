@@ -2,25 +2,30 @@
 import React, { useEffect, useState } from "react";
 import "./home.scss";
 import axios from "axios";
+import CourseTable from "../../components/courseTable";
 
 function Home() {
-    // eslint-disable-next-line no-unused-vars
-    const [studentId, setStudentId] = useState(localStorage.getItem("studentId"))
-    const [student, setStudent] = useState(null);
+  // eslint-disable-next-line no-unused-vars
+  const [courseList, setCourseList] = useState("");
 
-    const getStudentInfo = async () => {
-        await axios.get(`http://localhost:3540/api/students/student/${studentId}`).then(({ data }) => {
-          console.log(data);
-          setStudent(data);
-        });
-      };
-    
-      // Call the getStudentInfo function on page render.
-      useEffect(() => {
-        getStudentInfo();
-      }, [studentId]);
+  // Request to get all posts from database.
+  const getAllCourses = async () => {
+    await axios.get("http://localhost:3540/api/courses/").then(({ data }) => {
+      if (data) {
+        console.log(data);
+      }
+    });
+  };
+  // Call the getAllPosts function on the page render.
+  useEffect(() => {
+    getAllCourses();
+  }, []);
 
-  return <div>Welcome {student && student.name}</div>;
+  return (
+    <>
+      <CourseTable/>
+    </>
+  );
 }
 
 export default Home;

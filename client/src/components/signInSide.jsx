@@ -44,7 +44,7 @@ export default function SignInSide() {
           }
         })
       // If the values are correct navigate to the student home page
-      navigate("/home");
+      navigate("/profile");
       toast.success("Sign In Successful!");
     } catch (error) {
       console.log(error);
