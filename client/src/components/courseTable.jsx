@@ -39,20 +39,31 @@ function CourseTable() {
 
   // eslint-disable-next-line no-unused-vars
   const [courseList, setCourseList] = useState([]);
-  const [myCourseList, setMyCourseList] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState([])
 
   // Request to get all posts from database.
   const getAllCourses = async () => {
     await axios.get("http://localhost:3540/api/courses/").then(({ data }) => {
       if (data) {
-        console.log(data);
         setCourseList(data);
       }
     });
   };
-  // Call the getAllPosts function on the page render.
+
+
+  const getCourseById = async (_id) => {
+    await axios
+      .get(`http://localhost:3540/api/courses/get-a-course/${_id}`)
+      .then(({ data }) => {
+        setSelectedCourse({data})
+        console.log(selectedCourse);
+      });
+  };
+
+  // Call the getAllCourses and getCourseById function on the page render.
   useEffect(() => {
     getAllCourses();
+    getCourseById();
   }, []);
 
   const visibleRows = useMemo(
@@ -65,7 +76,7 @@ function CourseTable() {
   );
 
   if (isLoading) {
-    return <div>Loading...</div>; // Veri çekilirken "Loading..." mesajını göster
+    return <div>Loading...</div>;
   }
 
   function descendingComparator(a, b, orderBy) {
@@ -294,19 +305,6 @@ function CourseTable() {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - courseList.length) : 0;
 
-  const handleAddMyCourses = (courseName) => {
-    const selectedCourse = courseList.find(
-      (course) => course.courseName === courseName
-    );
-    if (selectedCourse) {
-      setMyCourseList((prevCourses) => [...prevCourses, selectedCourse]);
-      localStorage.setItem(
-        "myCoursesList",
-        JSON.stringify([...myCourseList, selectedCourse])
-      );
-    }
-  };
-
   // const handleAddMyCourses = (courseName) => {
   //   if (isSelected(courseName)) {
   //     return;
@@ -390,7 +388,7 @@ function CourseTable() {
                     >
                       <Button
                         variant="outlined"
-                        onClick={() => handleAddMyCourses(row.courseName)}
+                        onClick={()=> getCourseById(row._id)}
                         id="button-show-info"
                       >
                         ADD TO MY COURSES
