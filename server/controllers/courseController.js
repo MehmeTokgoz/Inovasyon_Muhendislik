@@ -10,6 +10,25 @@ const getAllCourses = async (req, res) => {
     console.log(error);
   }
 };
+//Get a course using id from database
+const getCourseById = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const courses = await Course.findById(id);
+
+    if (!courses) {
+      return res.status(404).json({ message: "Course was not found" });
+    }
+    return res.status(200).json({
+      courseName: courses.courseName,
+      courseId: courses.courseId,
+      instructor: courses.instructor,
+      objectId: courses._id,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 //Create and save new course
 const addNewCourse = async (req, res) => {
@@ -43,6 +62,4 @@ const addNewCourse = async (req, res) => {
   }
 };
 
-
-
-module.exports = { getAllCourses, addNewCourse }
+module.exports = { getAllCourses, addNewCourse, getCourseById };

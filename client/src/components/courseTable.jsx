@@ -38,11 +38,11 @@ function CourseTable() {
   const [dense, setDense] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  const initialCourses = JSON.parse(localStorage.getItem("myCourseList")) || [];
+  const [selectedCourses, setSelectedCourses] = useState(initialCourses);
+
   // eslint-disable-next-line no-unused-vars
   const [courseList, setCourseList] = useState([]);
-  const [selectedCourses, setSelectedCourses] = useState(
-    JSON.parse(localStorage.getItem("myCourseList")) || []
-  );
 
   // Request to get all posts from database.
   const getAllCourses = async () => {
@@ -54,27 +54,27 @@ function CourseTable() {
   };
 
   const getCourseById = async (_id) => {
-    await axios
-      .get(`http://localhost:3540/api/courses/get-a-course/${_id}`)
-      .then(({ data }) => {
-        if (!selectedCourses) {
-          setSelectedCourses({
+    try {
+      await axios
+        .get(`http://localhost:3540/api/courses/get-a-course/${_id}`)
+        .then(({ data }) => {
+          console.log({ data });
+
+          const courseToMove = {
             courseId: data.courseId,
             courseName: data.courseName,
             instructor: data.instructor,
-          });
-        }
-        console.log(selectedCourses);
-      });
-
-    if (selectedCourses) {
-      const courseToAdd = {
-        courseId: selectedCourses.courseId,
-        courseName: selectedCourses.courseName,
-        instructor: selectedCourses.instructor,
-      };
+          };
+          const updatedSelectedCourses = [...selectedCourses, courseToMove];
+          setSelectedCourses(updatedSelectedCourses);
+          localStorage.setItem(
+            "myCourseList",
+            JSON.stringify(updatedSelectedCourses)
+          );
+        });
+    } catch (error) {
+      console.log(error);
     }
-
     toast.success("Course Added");
   };
 
@@ -82,7 +82,8 @@ function CourseTable() {
   useEffect(() => {
     getAllCourses();
     getCourseById();
-  }, []);
+    localStorage.setItem("myCourseList", JSON.stringify(selectedCourses));
+  }, [selectedCourses]);
 
   const visibleRows = useMemo(
     () =>
@@ -322,14 +323,6 @@ function CourseTable() {
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - courseList.length) : 0;
-
-  // const handleAddMyCourses = (courseName) => {
-  //   if (isSelected(courseName)) {
-  //     return;
-  //   }
-  //   setSelected((prev) => [...prev, courseName]);
-  // };
-  // console.log(selected);
 
   return (
     <Box className="main-table-container">

@@ -39,10 +39,10 @@ export default function SignInSide() {
           console.log(data);
           if (data) {
             localStorage.setItem("studentId", data.studentId);
-            localStorage.setItem("access_token", data.access_token)
+            localStorage.setItem("access_token", data.access_token);
             console.log(data);
           }
-        })
+        });
       // If the values are correct navigate to the student home page
       navigate("/profile");
       toast.success("Sign In Successful!");

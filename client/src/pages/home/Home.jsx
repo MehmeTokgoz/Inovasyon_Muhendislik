@@ -23,7 +23,7 @@ function Home() {
 
   return (
     <>
-      <CourseTable/>
+      <CourseTable />
     </>
   );
 }
